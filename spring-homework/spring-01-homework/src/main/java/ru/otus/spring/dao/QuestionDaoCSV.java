@@ -12,9 +12,9 @@ import java.util.List;
 
 public class QuestionDaoCSV implements QuestionDao {
 
-    private Resource csvFile;
+    private final Resource csvFile;
 
-    public void setCsvFile(Resource csvFile) {
+    public QuestionDaoCSV(Resource csvFile) {
         this.csvFile = csvFile;
     }
 

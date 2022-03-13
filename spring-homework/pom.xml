@@ -12,5 +12,6 @@
 
     <modules>
         <module>spring-01-homework</module>
+        <module>spring-02-homework</module>
     </modules>
 </project>

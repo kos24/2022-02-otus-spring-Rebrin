@@ -6,7 +6,8 @@
 
     <bean id = "questionDao"
           class = "ru.otus.spring.dao.QuestionDaoCSV">
-        <property name = "csvFile" value = "/questions.csv"/>
+<!--        <property name = "csvFile" value = "/questions.csv"/>-->
+        <constructor-arg name="csvFile" value="/questions.csv"/>
     </bean>
 
     <bean id = "questionService"
