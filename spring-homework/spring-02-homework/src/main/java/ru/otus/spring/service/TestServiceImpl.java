@@ -9,13 +9,15 @@ import ru.otus.spring.dao.QuestionDao;
 public class TestServiceImpl implements TestService {
 
     private final QuestionDao questionDao;
-    private final IOService ioService = new IOServiceConsole(System.out, System.in);
+    private final IOService ioService;
+    private final int passThreshold;
 
-    @Value("${pass.threshold:3}")
-    private int passThreshold;
-
-    public TestServiceImpl(QuestionDao questionDao) {
+    public TestServiceImpl(QuestionDao questionDao,
+                           IOService ioService,
+                           @Value("${pass.threshold:3}") int passThreshold) {
         this.questionDao = questionDao;
+        this.ioService = ioService;
+        this.passThreshold = passThreshold;
     }
 
     public void doTest() {
