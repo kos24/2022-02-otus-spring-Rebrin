@@ -16,7 +16,7 @@ public class QuestionServiceImpl implements QuestionService {
     public void printQuestions() {
         questionDao.readQuestions().forEach(question ->
                 ioService.print(String.format("Question: %s%nPossible answers: %s",
-                        question.getQuestionAsked(), question.getPossibleAnswers())));
+                        question.getQuestionText(), question.getPossibleAnswers())));
     }
 
 }

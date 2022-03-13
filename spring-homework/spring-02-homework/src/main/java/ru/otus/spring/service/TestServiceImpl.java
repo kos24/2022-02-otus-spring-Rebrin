@@ -23,12 +23,12 @@ public class TestServiceImpl implements TestService {
         ioService.print("Please enter your name and lastname:");
         String name = ioService.read();
         ioService.print(String.format("You need to answer %d questions in order to pass the test", this.passThreshold));
-        this.questionDao.readQuestions().forEach(question -> {
-            ioService.print(question.getQuestionAsked());
-            ioService.print(question.getPossibleAnswers());
-            ioService.print("Please enter your answer: (type only the number of correct answer)");
-            int answer = ioService.readInt();
-            if (answer == Integer.parseInt(question.getAnswer())) {
+        questionDao.readQuestions().forEach(question -> {
+            ioService.print(question.getQuestionText());
+            question.getPossibleAnswers().forEach(answer -> ioService.print(answer.getVariant()));
+            ioService.print("Please enter your answer:");
+            String answer = ioService.read();
+            if (answer.equals(question.getCorrectAnswer())) {
                 correctAnswersCount.getAndIncrement();
             }
         });
