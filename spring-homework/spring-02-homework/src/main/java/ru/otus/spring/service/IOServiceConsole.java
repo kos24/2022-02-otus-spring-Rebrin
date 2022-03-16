@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class IOServiceConsole implements IOService {
 
     private PrintStream writer = System.out;
-    private Scanner reader= new Scanner(System.in);
+    private Scanner reader = new Scanner(System.in);
 
     @Autowired
     public IOServiceConsole() {

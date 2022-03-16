@@ -1,6 +1,7 @@
 package ru.otus.spring.service;
 
 import java.util.concurrent.atomic.AtomicInteger;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.otus.spring.dao.QuestionDao;
@@ -21,10 +22,22 @@ public class TestServiceImpl implements TestService {
     }
 
     public void doTest() {
-        AtomicInteger correctAnswersCount = new AtomicInteger();
-        ioService.print("Please enter your name and lastname:");
-        String name = ioService.read();
+        var correctAnswersCount = new AtomicInteger();
+        String name = inputName();
         ioService.print(String.format("You need to answer %d questions in order to pass the test", this.passThreshold));
+        processQuestions(correctAnswersCount);
+        outputResults(correctAnswersCount, name);
+
+
+    }
+
+    private String inputName() {
+        ioService.print("Please enter your name and lastname:");
+        return ioService.read();
+    }
+
+    private void processQuestions(AtomicInteger correctAnswersCount) {
+
         questionDao.readQuestions().forEach(question -> {
             ioService.print(question.getQuestionText());
             question.getPossibleAnswers().forEach(answer -> ioService.print(answer.getVariant()));
@@ -34,13 +47,14 @@ public class TestServiceImpl implements TestService {
                 correctAnswersCount.getAndIncrement();
             }
         });
+    }
+
+    private void outputResults(AtomicInteger correctAnswersCount, String name) {
         if (correctAnswersCount.get() >= this.passThreshold) {
             ioService.print(String.format("Congratulations, %s! You've passed the test.", name));
-            ioService.print(String.format("Correct answers: %d/%d", correctAnswersCount.get(), this.questionDao.readQuestions().size()));
         } else {
             ioService.print(String.format("Sorry, %s. You failed the test. Please try again later.", name));
-            ioService.print(String.format("Correct answers: %d/%d", correctAnswersCount.get(), this.questionDao.readQuestions().size()));
         }
-
+        ioService.print(String.format("Correct answers: %d/%d", correctAnswersCount.get(), this.questionDao.readQuestions().size()));
     }
 }

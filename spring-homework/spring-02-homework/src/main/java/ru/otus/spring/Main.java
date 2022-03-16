@@ -2,7 +2,7 @@ package ru.otus.spring;
 
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import ru.otus.spring.exception.QuestionLoadingException;
+import ru.otus.spring.service.DemoService;
 import ru.otus.spring.service.TestService;
 
 @ComponentScan
@@ -18,10 +18,6 @@ public class Main {
     public static void main(String[] args) {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
         TestService testService = context.getBean(TestService.class);
-        try {
-            testService.doTest();
-        } catch (QuestionLoadingException ex) {
-            ex.printStackTrace();
-        }
+        DemoService.run(testService);
     }
 }

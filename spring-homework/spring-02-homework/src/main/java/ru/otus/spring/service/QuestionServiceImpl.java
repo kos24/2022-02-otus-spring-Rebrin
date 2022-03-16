@@ -7,10 +7,11 @@ import ru.otus.spring.dao.QuestionDao;
 public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionDao questionDao;
-    private final IOService ioService = new IOServiceConsole(System.out, System.in);
+    private final IOService ioService;
 
-    public QuestionServiceImpl(QuestionDao questionDao) {
+    public QuestionServiceImpl(QuestionDao questionDao, IOService ioService) {
         this.questionDao = questionDao;
+        this.ioService = ioService;
     }
 
     public void printQuestions() {

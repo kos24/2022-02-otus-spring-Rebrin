@@ -1,22 +1,19 @@
 package ru.otus.spring.domain;
 
 public class Answer {
-    private String variant;
-    private boolean isCorrect;
+    private final String variant;
+    private final boolean isCorrect;
+
+    public Answer(String variant, boolean isCorrect) {
+        this.variant = variant;
+        this.isCorrect = isCorrect;
+    }
 
     public String getVariant() {
         return variant;
     }
 
-    public void setVariant(String variant) {
-        this.variant = variant;
-    }
-
     public boolean isCorrect() {
         return isCorrect;
-    }
-
-    public void setCorrect(boolean correct) {
-        isCorrect = correct;
     }
 }

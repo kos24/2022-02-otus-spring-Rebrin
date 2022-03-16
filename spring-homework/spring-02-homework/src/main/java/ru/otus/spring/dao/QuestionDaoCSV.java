@@ -17,8 +17,11 @@ import java.util.List;
 @Repository
 public class QuestionDaoCSV implements QuestionDao {
 
-    @Value("classpath:${path.to.csv:questions.csv}")
-    private Resource csvFile;
+    private final Resource csvFile;
+
+    public QuestionDaoCSV(@Value("classpath:${path.to.csv:questions.csv}") Resource csvFile) {
+        this.csvFile = csvFile;
+    }
 
     @Override
     public List<Question> readQuestions() {
@@ -36,20 +39,15 @@ public class QuestionDaoCSV implements QuestionDao {
                     String[] possibleAnswers = questionSplitted[1].split("\\$");
                     String correctAnswer = questionSplitted[2];
                     Arrays.stream(possibleAnswers).forEach(a -> {
-                        Answer answer = new Answer();
+                        Answer answer;
                         if (correctAnswer.equals(a)) {
-                            answer.setVariant(a);
-                            answer.setCorrect(true);
+                            answer = new Answer(a, true);
                         } else {
-                            answer.setVariant(a);
-                            answer.setCorrect(false);
+                            answer = new Answer(a, false);
                         }
                         answers.add(answer);
                     });
-                    Question question = Question.builder()
-                            .questionText(questionSplitted[0])
-                            .possibleAnswers(answers)
-                            .build();
+                    Question question = new Question(questionSplitted[0], answers);
                     questions.add(question);
                 }
             }
