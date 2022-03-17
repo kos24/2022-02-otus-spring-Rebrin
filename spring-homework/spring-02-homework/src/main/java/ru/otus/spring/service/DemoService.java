@@ -1,18 +1,24 @@
 package ru.otus.spring.service;
 
+import org.springframework.stereotype.Service;
 import ru.otus.spring.exception.QuestionLoadingException;
 
+@Service
 public class DemoService {
 
-    private DemoService() {
+    private final TestService testService;
+    private final IOService ioService;
+
+    public DemoService(TestService testService, IOService ioService) {
+        this.testService = testService;
+        this.ioService = ioService;
     }
 
-    public static void run(TestService testService) {
+    public void run() {
         try {
             testService.doTest();
-
         } catch (QuestionLoadingException ex) {
-            System.out.println("QuestionLoadingException is thrown");
+            ioService.print("Во время выполнения программы произошла ошибка.");
         }
     }
 }

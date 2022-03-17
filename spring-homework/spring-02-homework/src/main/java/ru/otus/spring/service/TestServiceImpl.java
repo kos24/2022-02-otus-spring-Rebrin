@@ -1,10 +1,12 @@
 package ru.otus.spring.service;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.otus.spring.dao.QuestionDao;
+import ru.otus.spring.domain.Question;
+import ru.otus.spring.domain.TestResult;
 
 @Service
 public class TestServiceImpl implements TestService {
@@ -22,13 +24,11 @@ public class TestServiceImpl implements TestService {
     }
 
     public void doTest() {
-        var correctAnswersCount = new AtomicInteger();
         String name = inputName();
         ioService.print(String.format("You need to answer %d questions in order to pass the test", this.passThreshold));
-        processQuestions(correctAnswersCount);
-        outputResults(correctAnswersCount, name);
-
-
+        List<Question> questions = questionDao.readQuestions();
+        TestResult testResult = askQuestions(questions);
+        outputResults(testResult, name);
     }
 
     private String inputName() {
@@ -36,25 +36,32 @@ public class TestServiceImpl implements TestService {
         return ioService.read();
     }
 
-    private void processQuestions(AtomicInteger correctAnswersCount) {
+    private TestResult askQuestions(List<Question> questions) {
 
-        questionDao.readQuestions().forEach(question -> {
-            ioService.print(question.getQuestionText());
-            question.getPossibleAnswers().forEach(answer -> ioService.print(answer.getVariant()));
+        TestResult testResult = new TestResult(questions.size());
+
+        questions.forEach(question -> {
+            outputQuestion(question);
             ioService.print("Please enter your answer:");
             String answer = ioService.read();
             if (answer.equals(question.getCorrectAnswer())) {
-                correctAnswersCount.getAndIncrement();
+                testResult.incrementCorrectAnswersCount();
             }
         });
+        return testResult;
     }
 
-    private void outputResults(AtomicInteger correctAnswersCount, String name) {
-        if (correctAnswersCount.get() >= this.passThreshold) {
+    private void outputQuestion(Question question) {
+        ioService.print(question.getQuestionText());
+        question.getPossibleAnswers().forEach(answer -> ioService.print(answer.getVariant()));
+    }
+
+    private void outputResults(TestResult testResult, String name) {
+        if (testResult.getCorrectAnswersCount() >= this.passThreshold) {
             ioService.print(String.format("Congratulations, %s! You've passed the test.", name));
         } else {
             ioService.print(String.format("Sorry, %s. You failed the test. Please try again later.", name));
         }
-        ioService.print(String.format("Correct answers: %d/%d", correctAnswersCount.get(), this.questionDao.readQuestions().size()));
+        ioService.print(String.format("Correct answers: %d/%d", testResult.getCorrectAnswersCount(), testResult.getMaxPoints()));
     }
 }
