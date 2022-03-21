@@ -1,0 +1,5 @@
+pass:
+  threshold: 2
+lang:
+#  locale: en-EN
+  locale: ru-RU
