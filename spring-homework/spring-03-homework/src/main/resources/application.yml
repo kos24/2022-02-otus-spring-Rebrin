@@ -1,5 +1,9 @@
+spring:
+  messages:
+    fallback-to-system-locale: false
+
 path:
-  locale:
+  pathToFileMap:
     default: questions_EN.csv
     en-EN: questions_EN.csv
     ru-RU: questions_RU.csv
