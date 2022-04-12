@@ -1,0 +1,15 @@
+spring:
+  messages:
+    fallback-to-system-locale: false
+  main:
+    allow-circular-references: true
+  shell:
+    interactive:
+      enabled: false
+
+path:
+  pathToFileMap:
+    en-EN: questions_EN.csv
+
+lang:
+  locale: en-EN
