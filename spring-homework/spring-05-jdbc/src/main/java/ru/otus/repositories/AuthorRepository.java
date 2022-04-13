@@ -5,7 +5,8 @@ import ru.otus.models.Author;
 import java.util.List;
 
 public interface AuthorRepository {
-    Author findByName(String fullName);
+
+    List<Author> findByNames(List<String> fullNames);
 
     List<Author> findAll();
 

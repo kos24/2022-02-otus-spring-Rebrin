@@ -1,20 +1,20 @@
 create table author
 (
-    id   bigint,
+    id   bigserial,
     full_name varchar(50),
     primary key (id)
 );
 
 create table genre
 (
-    id   bigint,
+    id   bigserial,
     name varchar(50),
     primary key (id)
 );
 
 create table book
 (
-    id       bigint,
+    id       bigserial,
     title    varchar(300),
     genre_id bigint references genre (id),
     primary key (id)

@@ -4,9 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import ru.otus.service.AuthorService;
 import ru.otus.service.BookService;
-import ru.otus.service.GenreService;
+import ru.otus.service.PrintModelService;
 
 import java.util.Arrays;
 
@@ -15,8 +14,7 @@ import java.util.Arrays;
 public class AppShellStarter {
 
     private final BookService bookService;
-    private final AuthorService authorService;
-    private final GenreService genreService;
+    private final PrintModelService printModelService;
 
     @ShellMethod(value = "Start", key = {"s", "start"})
     public void start() {
@@ -27,17 +25,17 @@ public class AppShellStarter {
 
     @ShellMethod(value = "list AllInfo", key = {"l", "list"})
     public void list() {
-        bookService.printAllWithInfo();
+        printModelService.printAllBooksWithInfo();
     }
 
     @ShellMethod(value = "list authors", key = {"la", "listAuthors"})
     public void listAuthors() {
-        authorService.printAll();
+        printModelService.printAllAuthors();
     }
 
     @ShellMethod(value = "list genres", key = {"lg", "listGenres"})
     public void listGenres() {
-        genreService.printAll();
+        printModelService.printAllGenres();
     }
 
     @ShellMethod(value = "insert book", key = {"i", "insert"})

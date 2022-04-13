@@ -11,7 +11,6 @@ import ru.otus.repositories.GenreRepository;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,13 +26,10 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void insert(String title, String genreName, String... authors) {
-        Long id = Math.round(Math.random() * 1000 + 1);
-        List<Author> authorList = Arrays.stream(authors)
-                .map(authorRepository::findByName)
-                .collect(Collectors.toList());
+    public Long insert(String title, String genreName, String... authors) {
+        List<Author> authorList = authorRepository.findByNames(Arrays.asList(authors));
         Genre genre = genreRepository.getByName(genreName);
-        bookRepository.insert(new Book(id, title, genre, authorList));
+        return bookRepository.insert(new Book(title, genre, authorList));
     }
 
     @Override
@@ -51,8 +47,4 @@ public class BookServiceImpl implements BookService {
         bookRepository.deleteById(id);
     }
 
-    @Override
-    public void printAllWithInfo() {
-        findAllWithAllInfo().forEach(System.out::println);
-    }
 }

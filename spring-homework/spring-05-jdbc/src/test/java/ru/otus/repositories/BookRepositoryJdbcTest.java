@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Репозиторий на основе Jdbc для работы с книгами ")
 @JdbcTest
@@ -31,10 +32,12 @@ class BookRepositoryJdbcTest {
     void shouldInsertBook() {
         List<Author> authors = Arrays.asList(new Author(5L, "author_name_05"),
                 new Author(6L, "author_name_06"));
-        Book expectedBook = new Book(7L, "title", new Genre(4L, "genre_name4"), authors);
-        repositoryJdbc.insert(expectedBook);
-        var actualBook = repositoryJdbc.findById(expectedBook.getId());
-        assertThat(actualBook).usingRecursiveComparison().isEqualTo(expectedBook);
+        Book expectedBook = new Book("title", new Genre(4L, "genre_name4"), authors);
+        Long expectedId = repositoryJdbc.insert(expectedBook);
+        var actualBook = repositoryJdbc.findById(expectedId);
+        assertThat(actualBook).isNotNull();
+        assertThat(actualBook.getId()).isEqualTo(expectedId);
+        assertThat(actualBook.getTitle()).isEqualTo(expectedBook.getTitle());
     }
 
     @DisplayName("должен находить книгу в БД по id")

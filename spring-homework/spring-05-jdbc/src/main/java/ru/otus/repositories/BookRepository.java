@@ -5,7 +5,7 @@ import ru.otus.models.Book;
 import java.util.List;
 
 public interface BookRepository {
-    void insert(Book book);
+    Long insert(Book book);
 
     Book findByTitle(String title);
 

@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -19,16 +20,23 @@ public class AuthorRepositoryJdbc implements AuthorRepository {
     private final NamedParameterJdbcOperations jdbc;
 
     @Override
-    public Author findByName(String fullName) {
-        try {
-            return jdbc.queryForObject("Select a.id, a.full_name from author a where a.full_name = :fullName",
-                    Map.of("fullName",
-                            fullName), new AuthorRowMapper());
-        } catch (Exception e) {
-            throw new AuthorNotFoundException(String.format("Can't find author: %s", fullName));
-        }
+    public List<Author> findByNames(List<String> fullNames) {
+        checkIfNameExist(fullNames);
+        return jdbc.query("Select a.id, a.full_name from author a where a.full_name in (:fullNames)",
+                Map.of("fullNames",
+                        fullNames), new AuthorRowMapper());
     }
 
+    private void checkIfNameExist(List<String> fullNames) {
+        List<String> authorNames = findAll().stream().map(Author::getFullName).collect(Collectors.toList());
+        List<String> authorsNotInDB = fullNames.stream()
+                .filter(name -> !authorNames.contains(name))
+                .collect(Collectors.toList());
+        if (!authorsNotInDB.isEmpty()) {
+            throw new AuthorNotFoundException(String.format("Can't find authors: %s",
+                    String.join(", ", authorsNotInDB)));
+        }
+    }
 
     @Override
     public List<Author> findAll() {
@@ -39,8 +47,8 @@ public class AuthorRepositoryJdbc implements AuthorRepository {
     @Override
     public List<Author> findAllUsed() {
         return jdbc.query("select a.id, a.full_name " +
-                          "from author a inner join book_author ba on a.id = ba.author_id " +
-                          "group by a.id, a.full_name ", new AuthorRowMapper());
+                "from author a inner join book_author ba on a.id = ba.author_id " +
+                "group by a.id, a.full_name ", new AuthorRowMapper());
     }
 
     @Override
@@ -53,7 +61,7 @@ public class AuthorRepositoryJdbc implements AuthorRepository {
     private static class AuthorRowMapper implements RowMapper<Author> {
         @Override
         public Author mapRow(ResultSet rs, int i) throws SQLException {
-            return new Author(rs.getLong(1), rs.getString(2));
+            return new Author(rs.getLong("id"), rs.getString("full_name"));
         }
     }
 
