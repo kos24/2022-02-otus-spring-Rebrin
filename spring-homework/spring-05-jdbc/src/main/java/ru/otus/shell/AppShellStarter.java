@@ -58,4 +58,10 @@ public class AppShellStarter {
     public void deleteById(@ShellOption Long id) {
         bookService.deleteBookById(id);
     }
+
+    @ShellMethod(value = "update book", key = {"u", "update"})
+    public void deleteById(@ShellOption Long id, @ShellOption String title, @ShellOption String genre, @ShellOption String args) {
+        String[] authors = Arrays.stream(args.split(",")).map(String::trim).toArray(String[]::new);
+        bookService.update(id, title, genre, authors);
+    }
 }

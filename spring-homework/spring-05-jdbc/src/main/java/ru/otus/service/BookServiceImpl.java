@@ -43,6 +43,13 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public void update(Long id, String title, String genreName, String... authors) {
+        List<Author> authorList = authorRepository.findByNames(Arrays.asList(authors));
+        Genre genre = genreRepository.getByName(genreName);
+        bookRepository.update(new Book(id, title, genre, authorList));
+    }
+
+    @Override
     public void deleteBookById(Long id) {
         bookRepository.deleteById(id);
     }

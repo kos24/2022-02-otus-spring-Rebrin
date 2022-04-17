@@ -13,5 +13,7 @@ public interface BookRepository {
 
     void deleteById(Long id);
 
+    void update(Book book);
+
     List<Book> findAllWithAllInfo();
 }

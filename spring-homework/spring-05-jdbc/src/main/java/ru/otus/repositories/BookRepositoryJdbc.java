@@ -78,9 +78,19 @@ public class BookRepositoryJdbc implements BookRepository {
     @Override
     public void deleteById(Long id) {
         jdbc.update("Delete from book where id = :id", Map.of("id", id));
-        deleteRelations(id);
     }
 
+    @Override
+    public void update(Book book) {
+        jdbc.update("Update book set title = :title, genre_id = :genreId where id = :id",
+                Map.of("title", book.getTitle(),
+                        "genreId", book.getGenre().getId(),
+                        "id", book.getId()));
+        deleteRelations(book.getId());
+        book.getAuthors().forEach(author -> {
+            updateRelations(book.getId(), author.getId());
+        });
+    }
 
     @Override
     public List<Book> findAllWithAllInfo() {
@@ -105,7 +115,12 @@ public class BookRepositoryJdbc implements BookRepository {
     }
 
     private void deleteRelations(Long bookId) {
-        jdbc.update("delete from book_author where book_id = :bookId", Map.of("bookId", bookId));
+        jdbc.update("Delete from book_author where book_id = :bookId", Map.of("bookId", bookId));
+    }
+
+    private void updateRelations(Long bookId, Long authorId) {
+        jdbc.update("Insert into book_author(book_id, author_id) values (:bookId, :authorId)",
+                Map.of("bookId", bookId, "authorId", authorId));
     }
 
     private List<Book> mergeBooksAuthors(List<Book> books, List<Author> authors,

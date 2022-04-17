@@ -13,5 +13,7 @@ public interface BookService {
 
     Book getBookById(Long id);
 
+    void update(Long id, String title, String genreName, String... authors);
+
     void deleteBookById(Long id);
 }
