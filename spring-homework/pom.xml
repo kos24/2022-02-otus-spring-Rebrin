@@ -15,5 +15,6 @@
         <module>spring-02-homework</module>
         <module>spring-03-homework</module>
         <module>spring-04-homework</module>
+        <module>spring-05-jdbc</module>
     </modules>
 </project>
