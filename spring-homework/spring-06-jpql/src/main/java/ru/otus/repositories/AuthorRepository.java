@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface AuthorRepository {
 
-    List<Author> findByNames(List<String> fullNames);
+    Author findByName(String fullName);
 
     List<Author> findAll();
+
+    Author update(Author author);
 }

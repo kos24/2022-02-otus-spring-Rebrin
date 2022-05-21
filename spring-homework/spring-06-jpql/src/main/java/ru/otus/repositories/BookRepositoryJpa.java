@@ -2,6 +2,7 @@ package ru.otus.repositories;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import ru.otus.models.Author;
 import ru.otus.models.Book;
 
 import javax.persistence.EntityManager;
@@ -16,6 +17,8 @@ public class BookRepositoryJpa implements BookRepository {
 
     @PersistenceContext
     private final EntityManager em;
+
+    private final AuthorRepository authorRepository;
 
     @Override
     public Book save(Book book) {
@@ -59,17 +62,19 @@ public class BookRepositoryJpa implements BookRepository {
 
     @Override
     public Book update(Book book) {
-        Book oldBook = em.find(Book.class, book.getId());
-        if (!book.getTitle().isBlank()) {
-            oldBook.setTitle(book.getTitle());
-        }
-        if (book.getGenre() != null){
-            oldBook.setGenre(book.getGenre());
-        }
-        if (book.getAuthors() != null){
-            oldBook.setAuthors(book.getAuthors());
-        }
-        return em.merge(oldBook);
+        Query query = em.createQuery(
+                "update Book b " +
+                        "set b.title = :title, " +
+                        "b.genre = :genre " +
+                        "where b.id = :id");
+        query.setParameter("title", book.getTitle());
+        query.setParameter("genre", book.getGenre());
+        query.setParameter("id", book.getId());
+        query.executeUpdate();
+        Book updatedBook = em.find(Book.class, book.getId());
+        List<Author> updatedAuthors = book.getAuthors().stream().map(authorRepository::update).toList();
+        updatedBook.setAuthors(updatedAuthors);
+        return updatedBook;
     }
 
     @Override

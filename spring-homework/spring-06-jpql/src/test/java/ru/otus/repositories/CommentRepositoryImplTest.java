@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
-import org.springframework.shell.CommandNotCurrentlyAvailable;
 import ru.otus.models.Book;
 import ru.otus.models.Comment;
 
@@ -19,14 +18,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Import(CommentRepositoryImpl.class)
 class CommentRepositoryImplTest {
 
-    public static final long FIRST_COMMENT_ID = 1L;
-    public static final String NEW_COMMENT = "new comment";
-    public static final int EXPECTED_NUMBER_OF_COMMENTS = 2;
+    private static final long FIRST_COMMENT_ID = 1L;
+    private static final String NEW_COMMENT = "new comment";
+    private static final int EXPECTED_NUMBER_OF_COMMENTS = 2;
+
     @Autowired
     CommentRepository repositoryJpa;
 
     @Autowired
-    TestEntityManager em;
+    private TestEntityManager em;
 
     @DisplayName("должен добавлять новый комментарий")
     @Test

@@ -38,12 +38,8 @@ public class Book {
     @BatchSize(size = 5)
     private List<Author> authors;
 
-    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-    @BatchSize(size = 5)
-    private List<Comment> comments;
-
-    public Book(String title, Genre genre, List<Author> authors, List<Comment> comments) {
-        this(null, title, genre, authors, comments);
+    public Book(String title, Genre genre, List<Author> authors) {
+        this(null, title, genre, authors);
     }
 
     @Override
@@ -64,9 +60,6 @@ public class Book {
         return "Book{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", genre=" + genre +
-                ", authors=" + authors +
-                ", comments=" + comments +
                 '}';
     }
 }

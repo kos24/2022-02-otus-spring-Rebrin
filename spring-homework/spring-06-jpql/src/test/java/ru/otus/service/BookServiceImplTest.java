@@ -28,29 +28,29 @@ import static org.mockito.Mockito.verify;
 @SpringBootTest
 class BookServiceImplTest {
 
-    public static final String GENRE = "genre1";
-    public static final long ID = 1L;
-    public static final String TITLE = "test1";
-    public static final String FIRST_AUTHOR = "author1";
-    public static final String SECOND_AUTHOR = "author2";
+    private static final String GENRE = "genre1";
+    private static final long ID = 1L;
+    private static final String TITLE = "test1";
+    private static final String FIRST_AUTHOR = "author1";
+    private static final String SECOND_AUTHOR = "author2";
 
     @Autowired
-    BookService bookService;
+    private BookService bookService;
 
     @MockBean
-    GenreRepository genreRepository;
+    private GenreRepository genreRepository;
 
     @MockBean
-    AuthorRepository authorRepository;
+    private AuthorRepository authorRepository;
 
     @MockBean
-    BookRepository bookRepository;
+    private BookRepository bookRepository;
 
     @MockBean
-    BookRequestDtoConverter converter;
+    private BookRequestDtoConverter converter;
 
-    String title;
-    Long expectedId;
+    private String title;
+    private Long expectedId;
 
     @BeforeEach
     void setUp() {
@@ -63,10 +63,10 @@ class BookServiceImplTest {
 
         List<Author> authors = List.of(new Author(1L, FIRST_AUTHOR), new Author(2L, SECOND_AUTHOR));
         var genre = new Genre(ID,GENRE);
-        var expectedBook = new Book(ID, TITLE, genre, authors, null);
+        var expectedBook = new Book(ID, TITLE, genre, authors);
         var bookRequestDto = new BookRequestDto(null, title, GENRE, new String[] {FIRST_AUTHOR, SECOND_AUTHOR});
 
-        Mockito.when(authorRepository.findByNames(any())).thenReturn(authors);
+        Mockito.when(authorRepository.findByName(any())).thenReturn(authors.get(0)).thenReturn(authors.get(1));
         Mockito.when(genreRepository.getByName(anyString())).thenReturn(genre);
         Mockito.when(converter.convert(bookRequestDto)).thenReturn(expectedBook);
         Mockito.when(bookRepository.save(any(Book.class))).thenReturn(expectedBook);

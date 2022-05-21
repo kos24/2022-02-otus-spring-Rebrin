@@ -1,7 +1,5 @@
 package ru.otus.service;
 
-import org.springframework.transaction.annotation.Transactional;
-
 public interface PrintModelService {
     void printAllBooksWithInfo();
 
@@ -11,9 +9,7 @@ public interface PrintModelService {
 
     void printAllCommentsByBookId(Long bookId);
 
-    @Transactional
     void printBookByTitle(String title);
 
-    @Transactional
     void printBookById(Long bookId);
 }

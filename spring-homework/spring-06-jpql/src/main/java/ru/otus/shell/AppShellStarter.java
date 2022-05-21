@@ -66,9 +66,10 @@ public class AppShellStarter {
     }
 
     @ShellMethod(value = "update book", key = {"u", "update"})
-    public void updateById(@ShellOption Long id, @ShellOption(value = "title", defaultValue = "") String title,
-                           @ShellOption(value = "genre", defaultValue = "") String genre,
-                           @ShellOption(value = "authors", defaultValue = "") String authorsList) {
+    public void updateById(@ShellOption Long id,
+                           @ShellOption(value = "title") String title,
+                           @ShellOption(value = "genre") String genre,
+                           @ShellOption(value = "authors") String authorsList) {
         String[] authors = Arrays.stream(authorsList.split(",")).map(String::trim).toArray(String[]::new);
         bookService.update(new BookRequestDto(id, title, genre, authors));
     }

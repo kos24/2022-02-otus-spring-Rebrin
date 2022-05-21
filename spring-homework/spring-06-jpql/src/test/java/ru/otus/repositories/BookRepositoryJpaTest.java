@@ -2,9 +2,11 @@ package ru.otus.repositories;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import ru.otus.models.Author;
 import ru.otus.models.Book;
@@ -14,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 
 @DisplayName("Репозиторий на основе Jpa для работы с книгами ")
 @DataJpaTest
@@ -21,15 +24,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 class BookRepositoryJpaTest {
 
     private static final Long FIRST_BOOK_ID = 1L;
-    public static final String NEW_TITLE = "new title";
-    public static final String FIRST_BOOK_TITLE = "book_01";
-    public static final int EXPECTED_NUMBER_OF_BOOKS = 3;
-    public static final List<Author> AUTHORS = Arrays.asList(new Author("author_name_04"),
+    private static final String NEW_TITLE = "new title";
+    private static final String FIRST_BOOK_TITLE = "book_01";
+    private static final int EXPECTED_NUMBER_OF_BOOKS = 3;
+    private static final List<Author> AUTHORS = Arrays.asList(new Author("author_name_04"),
             new Author("author_name_05"));
-    public static final String NEW_GENRE = "genre_name4";
+    private static final String NEW_GENRE = "genre_name4";
 
     @Autowired
     private BookRepository repositoryJpa;
+
+    @MockBean
+    private AuthorRepository authorRepository;
 
     @Autowired
     private TestEntityManager em;
@@ -38,7 +44,7 @@ class BookRepositoryJpaTest {
     @Test
     void shouldInsertBook() {
 
-        var expectedBook = repositoryJpa.save(new Book(NEW_TITLE, new Genre(NEW_GENRE), AUTHORS, null));
+        var expectedBook = repositoryJpa.save(new Book(NEW_TITLE, new Genre(NEW_GENRE), AUTHORS));
         assertThat(expectedBook.getId()).isPositive();
         var actualBook = em.find(Book.class, expectedBook.getId());
         assertThat(actualBook).isNotNull().matches(book -> book.getTitle().equals(expectedBook.getTitle()))
@@ -49,7 +55,14 @@ class BookRepositoryJpaTest {
     @DisplayName("должен обновлять книгу в БД по ID")
     @Test
     void shouldUpdateBookById() {
+
         var initialBook = em.find(Book.class, FIRST_BOOK_ID);
+
+        Mockito.when(authorRepository.update(any(Author.class)))
+                .thenReturn(em.find(Author.class, 1L))
+                .thenReturn(em.find(Author.class, 2L))
+                .thenReturn(em.find(Author.class, 3L));
+
         String oldTitle = initialBook.getTitle();
         initialBook.setTitle(NEW_TITLE);
         repositoryJpa.update(initialBook);
