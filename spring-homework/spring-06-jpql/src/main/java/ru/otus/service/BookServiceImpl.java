@@ -26,7 +26,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public Book insert(BookRequestDto bookRequestDto) {
-        return bookRepository.save(converterToBook.convert(bookRequestDto));
+        return bookRepository.saveOrUpdate(converterToBook.convert(bookRequestDto));
     }
 
     @Override
@@ -44,7 +44,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public Book update(BookRequestDto bookRequestDto) {
-        return bookRepository.update(converterToBook.convert(bookRequestDto));
+        return bookRepository.saveOrUpdate(converterToBook.convert(bookRequestDto));
     }
 
     @Override

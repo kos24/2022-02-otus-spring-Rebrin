@@ -44,7 +44,7 @@ class BookRepositoryJpaTest {
     @Test
     void shouldInsertBook() {
 
-        var expectedBook = repositoryJpa.save(new Book(NEW_TITLE, new Genre(NEW_GENRE), AUTHORS));
+        var expectedBook = repositoryJpa.saveOrUpdate(new Book(NEW_TITLE, new Genre(NEW_GENRE), AUTHORS));
         assertThat(expectedBook.getId()).isPositive();
         var actualBook = em.find(Book.class, expectedBook.getId());
         assertThat(actualBook).isNotNull().matches(book -> book.getTitle().equals(expectedBook.getTitle()))
@@ -65,7 +65,7 @@ class BookRepositoryJpaTest {
 
         String oldTitle = initialBook.getTitle();
         initialBook.setTitle(NEW_TITLE);
-        repositoryJpa.update(initialBook);
+        repositoryJpa.saveOrUpdate(initialBook);
         em.flush();
         em.clear();
 

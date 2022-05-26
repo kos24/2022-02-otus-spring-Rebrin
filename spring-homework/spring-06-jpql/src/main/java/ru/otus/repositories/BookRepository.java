@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface BookRepository {
 
-    Book save(Book book);
+    Book saveOrUpdate(Book book);
 
     List<Book> findByTitle(String title);
 
@@ -14,7 +14,7 @@ public interface BookRepository {
 
     void deleteById(Long id);
 
-    Book update(Book book);
+//    Book update(Book book);
 
     List<Book> findAll();
 }

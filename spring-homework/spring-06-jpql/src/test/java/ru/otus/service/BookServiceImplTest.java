@@ -69,7 +69,7 @@ class BookServiceImplTest {
         Mockito.when(authorRepository.findByName(any())).thenReturn(authors.get(0)).thenReturn(authors.get(1));
         Mockito.when(genreRepository.getByName(anyString())).thenReturn(genre);
         Mockito.when(converter.convert(bookRequestDto)).thenReturn(expectedBook);
-        Mockito.when(bookRepository.save(any(Book.class))).thenReturn(expectedBook);
+        Mockito.when(bookRepository.saveOrUpdate(any(Book.class))).thenReturn(expectedBook);
 
         var actualBook = bookService.insert(bookRequestDto);
 

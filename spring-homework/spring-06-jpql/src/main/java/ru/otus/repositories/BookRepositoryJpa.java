@@ -18,10 +18,10 @@ public class BookRepositoryJpa implements BookRepository {
     @PersistenceContext
     private final EntityManager em;
 
-    private final AuthorRepository authorRepository;
+//    private final AuthorRepository authorRepository;
 
     @Override
-    public Book save(Book book) {
+    public Book saveOrUpdate(Book book) {
         if (book.getId() == null) {
             em.persist(book);
             return book;
@@ -60,22 +60,22 @@ public class BookRepositoryJpa implements BookRepository {
         query.executeUpdate();
     }
 
-    @Override
-    public Book update(Book book) {
-        Query query = em.createQuery(
-                "update Book b " +
-                        "set b.title = :title, " +
-                        "b.genre = :genre " +
-                        "where b.id = :id");
-        query.setParameter("title", book.getTitle());
-        query.setParameter("genre", book.getGenre());
-        query.setParameter("id", book.getId());
-        query.executeUpdate();
-        Book updatedBook = em.find(Book.class, book.getId());
-        List<Author> updatedAuthors = book.getAuthors().stream().map(authorRepository::update).toList();
-        updatedBook.setAuthors(updatedAuthors);
-        return updatedBook;
-    }
+//    @Override
+//    public Book update(Book book) {
+//        Query query = em.createQuery(
+//                "update Book b " +
+//                        "set b.title = :title, " +
+//                        "b.genre = :genre " +
+//                        "where b.id = :id");
+//        query.setParameter("title", book.getTitle());
+//        query.setParameter("genre", book.getGenre());
+//        query.setParameter("id", book.getId());
+//        query.executeUpdate();
+//        Book updatedBook = em.find(Book.class, book.getId());
+//        List<Author> updatedAuthors = book.getAuthors().stream().map(authorRepository::update).toList();
+//        updatedBook.setAuthors(updatedAuthors);
+//        return updatedBook;
+//    }
 
     @Override
     public List<Book> findAll() {
