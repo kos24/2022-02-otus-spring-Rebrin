@@ -16,11 +16,6 @@ import java.util.Arrays;
 @ChangeLog(order = "001")
 public class DatabaseChangelog {
 
-//    @ChangeSet(order = "001", id = "dropDb", author = "korebrin", runAlways = true)
-//    public void dropDb(MongoDatabase db) {
-//        db.drop();
-//    }
-
     @ChangeSet(order = "001", id = "insertGenre1", author = "korebrin")
     public void insertGenre1(GenreRepository genreRepository) {
         genreRepository.save(new Genre("genre1"));

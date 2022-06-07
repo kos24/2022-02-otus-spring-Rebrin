@@ -7,7 +7,6 @@ import ru.otus.converter.BookRequestDtoConverter;
 import ru.otus.dto.BookRequestDto;
 import ru.otus.exceptions.BookNotFoundException;
 import ru.otus.models.Book;
-import ru.otus.models.Comment;
 import ru.otus.repositories.BookRepository;
 import ru.otus.repositories.CommentRepository;
 
@@ -43,7 +42,7 @@ public class BookServiceImpl implements BookService {
     @Transactional(readOnly = true)
     public Book getBookById(String id) {
         return bookRepository.findById(id)
-                .orElseThrow(() -> new BookNotFoundException(String.format("Book with id: %s", id)));
+                .orElseThrow(() -> new BookNotFoundException(String.format("Book with id: %s not found", id)));
     }
 
     @Override
