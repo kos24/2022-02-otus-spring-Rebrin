@@ -18,5 +18,6 @@
         <module>spring-05-jdbc</module>
         <module>spring-06-jpql</module>
         <module>spring-07-spring-data-jpa</module>
+        <module>spring-08-spring-data-mongo</module>
     </modules>
 </project>
